@@ -210,8 +210,18 @@ h1 {
 			position: absolute;
 			text-align: center;
 			.border-radius(6px);
+			top: 600px;
+			.transition(top 1.2s ease-in-out);
 		}
+	}
+}
 
+.football-pitch.ready {
+	.lines {
+		opacity: 1;
+	}
+
+	.schedules {
 		.match-vs16 {
 		  width: 150px;
 		  height: 60px;
@@ -313,12 +323,5 @@ h1 {
 		  top: 200px;
 		  background: #c0392b;
 		}
-
-	}
-}
-
-.football-pitch.ready {
-	.lines {
-		opacity: 1;
 	}
 }
