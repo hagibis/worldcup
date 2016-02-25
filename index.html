@@ -6,10 +6,15 @@
 	<link rel="stylesheet/less" href="index.less">
 	<script src="http://cdn.staticfile.org/less.js/1.7.0/less.min.js"></script>
 	<script>less.watch();</script>
+	<script>
+		window.onload = function() {
+			document.getElementById("pitch").className = "football-pitch ready";
+		}
+	</script>
 </head>
 <body>
 	<h1>共嗨世界杯</h1>
-	<div class="football-pitch">
+	<div id="pitch" class="football-pitch">
 		<div class="lines">
 			<div class="halfway-line"></div>
 			<div class="center-circle"></div>

@@ -25,6 +25,15 @@ h1 {
 	border-radius: @radius;
 }
 
+.transition(@transition) {
+	-webkit-transition: @transition;
+	-ms-transition: @transition;
+	-o-transition: @transition;
+	-moz-transition: @transition;
+	-webkit-transition: @transition;
+	transition: @transition;
+}
+
 .football-pitch {
 	position: relative;
 	width: 1000px;
@@ -35,6 +44,8 @@ h1 {
 	overflow: hidden;
 
 	.lines {
+		opacity: 0;
+		.transition(opacity 1.2s ease-in-out);
 
 		.halfway-line{
 			position: absolute;
@@ -303,5 +314,11 @@ h1 {
 		  background: #c0392b;
 		}
 
+	}
+}
+
+.football-pitch.ready {
+	.lines {
+		opacity: 1;
 	}
 }
