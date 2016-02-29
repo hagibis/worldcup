@@ -16,12 +16,18 @@ var football = (function () {
 	var ball
 
 	Ball.prototype.draw = function(){
-		context.drawImage(this.image, 
-			0, 0, 
-			100, 100,
-			this.x, this.y,
-			this.width, this.height
-			)
+		this.context.save()
+		this.rotate()
+		this.context.drawImage(this.image, 
+			0, 0, // 开始剪切的 x,y 坐标位置。
+			100, 100, // 被剪切图像的宽度、高度。
+			this.x, this.y, // 在画布上放置图像的 x,y 坐标位置。
+			this.width, this.height // 要使用的图像的宽度、高度。（伸展或缩小图像）
+		)
+		this.context.restore()
+
+		if (this.vx > 0) 
+			this.degree += 1 * this.vx
 	}
 
 	Ball.prototype.move = function(){
@@ -35,7 +41,7 @@ var football = (function () {
 		}
 
 		// 判断是否发生碰撞
-		if ((this.y + this.height) > canvas.height) {
+		if ((this.y + this.height) > this.canvas.height) {
 			this.hit()
 			this.vyAdjust *= this.factor // 调整校验参数
 			this.vx -= this.vxAdjust
@@ -48,24 +54,22 @@ var football = (function () {
 
 	Ball.prototype.hit = function(){
 		this.vy = this.vyAdjust
-	};
-
-	function clearCanvas () {
-		context && context.clearRect(0, 0, canvas.width, canvas.height)
 	}
 
-	function update () {
-		clearCanvas()
-		ball.move()
-		ball.draw()	  
+	Ball.prototype.rotate = function(){
+		 this.context.translate(this.x + this.width / 2, this.y + this.height / 2);
+		 this.context.rotate(Math.PI / 180 * this.degree);
+		 this.context.translate(-this.x - this.width / 2, -this.y - this.height / 2);
 	}
 
-	function loop () {
-		update()
+	Ball.prototype.clearCanvas = function(){
+		this.context && this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+	}
 
-		if (!ball.end) {
-			requestAnimFrame(loop) 
-		}
+	Ball.prototype.update = function() {
+		this.clearCanvas()
+		this.move()
+		this.draw()	  
 	}
 
 	function Ball (ballimage, argument) {
@@ -74,6 +78,8 @@ var football = (function () {
 		this.x = argument.left
 		this.y = argument.top
 		this.image = ballimage
+		this.context = argument.context
+		this.canvas = argument.canvas
 
 		// 自由落体相关系数
 		this.gravity = 0.4  // 重力加速度
@@ -83,6 +89,15 @@ var football = (function () {
 		this.vxAdjust = 0.25 // 水平方向阻尼系数
 		this.factor = 0.65 // 衰减系数
 		this.end = false
+		this.degree = 0
+	}
+
+	function loop () {
+		ball.update()
+
+		if (!ball.end) {
+			requestAnimFrame(loop) 
+		}
 	}
 
 	function loadBall () {
@@ -90,7 +105,9 @@ var football = (function () {
 			width: 100,
 			height: 100,
 			left: 0,
-			top: 0
+			top: 0,
+			context: context,
+			canvas: canvas
 		})
 
 		//ball.draw();
